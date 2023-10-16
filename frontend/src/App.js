@@ -1,8 +1,9 @@
+import "./index.css"
 
 function App() {
   return (
-    <div className="App">
-      <h1 className="text-4xl"> Ticketing system</h1>
+    <div >
+      <h1 className="text-xs"> Ticketing system</h1>
     </div>
   );
 }
