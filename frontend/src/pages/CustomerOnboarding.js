@@ -2,7 +2,7 @@ import React from 'react'
 
 function CustomerOnboarding() {
   return (
-    <div>CustomerOnboarding</div>
+    <div>muskan</div>
   )
 }
 
