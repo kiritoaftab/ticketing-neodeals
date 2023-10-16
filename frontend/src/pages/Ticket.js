@@ -21,8 +21,8 @@ function Ticket() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your form submission logic here
-    setFormSubmitSuccess(true); // You can set this to true upon successful submission
+    console.log(formData)
+    setFormSubmitSuccess(true); 
   };
 
   return (
