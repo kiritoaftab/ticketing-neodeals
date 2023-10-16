@@ -2,7 +2,7 @@ import React from 'react'
 
 function StaffOnboarding() {
   return (
-    <div>StaffOnboarding</div>
+    <div>Staff members</div>
   )
 }
 
