@@ -22,6 +22,16 @@ function LoginSignup() {
 
   const navigate = useNavigate();
 
+  const regFormData = {
+    username: regUsername,
+    name:regName,
+    email:regEmail,
+    phone:regPhoneNumber,
+    password:regPassword,
+    confirmPassword:regConfirmPassword,
+    address:regAddress
+  }
+
   async function handleLogin() {
     // Form validation (you can add more validation as needed)
     if (!loginUsername || !loginPassword) {
@@ -36,19 +46,20 @@ function LoginSignup() {
       password: loginPassword,
     };
 
-    try {
-      const response = await axios.post('http://your-api-url.com/login', reqBody);
+    console.log(reqBody)
+    // try {
+    //   const response = await axios.post('http://your-api-url.com/login', reqBody);
 
-      if (response.data.status === 200) {
-        // Successful login
-        navigate('/dashboard'); // Redirect to the dashboard or desired page
-      } else {
-        alert('Login failed. Please check your credentials.');
-      }
-    } catch (error) {
-      console.error('Error logging in', error);
-      alert('An error occurred while logging in.');
-    }
+    //   if (response.data.status === 200) {
+    //     // Successful login
+    //     navigate('/dashboard'); // Redirect to the dashboard or desired page
+    //   } else {
+    //     alert('Login failed. Please check your credentials.');
+    //   }
+    // } catch (error) {
+    //   console.error('Error logging in', error);
+    //   alert('An error occurred while logging in.');
+    // }
 
     setLoginLoader(false);
   }
@@ -65,30 +76,32 @@ function LoginSignup() {
       return;
     }
 
+    console.log(regFormData)
+
     setRegLoader(true);
 
-    const reqBody = {
-      username: regUsername,
-      name: regName,
-      email: regEmail,
-      phone: regPhoneNumber,
-      password: regPassword,
-      address: regAddress,
-    };
+    // const reqBody = {
+    //   username: regUsername,
+    //   name: regName,
+    //   email: regEmail,
+    //   phone: regPhoneNumber,
+    //   password: regPassword,
+    //   address: regAddress,
+    // };
 
-    try {
-      const response = await axios.post('http://your-api-url.com/register', reqBody);
+    // try {
+    //   const response = await axios.post('http://your-api-url.com/register', reqBody);
 
-      if (response.data.status === 201) {
-        // Successful registration
-        navigate('/dashboard'); // Redirect to the dashboard or desired page
-      } else {
-        alert('Registration failed. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error registering', error);
-      alert('An error occurred while registering.');
-    }
+    //   if (response.data.status === 201) {
+    //     // Successful registration
+    //     navigate('/dashboard'); // Redirect to the dashboard or desired page
+    //   } else {
+    //     alert('Registration failed. Please try again.');
+    //   }
+    // } catch (error) {
+    //   console.error('Error registering', error);
+    //   alert('An error occurred while registering.');
+    // }
 
     setRegLoader(false);
   }
@@ -106,7 +119,7 @@ function LoginSignup() {
                 <input
                   type="text"
                   className="form-input rounded-md shadow-sm w-full py-3 px-4"
-                  placeholder=""
+                  placeholder="Enter your username"
                   value={loginUsername}
                   onChange={(e) => setLoginUsername(e.target.value)}
                 />
@@ -116,7 +129,7 @@ function LoginSignup() {
                 <input
                   type="password"
                   className="form-input rounded-md shadow-sm w-full py-3 px-4"
-                  placeholder="......."
+                  placeholder="Enter your password"
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
                 />
@@ -136,11 +149,11 @@ function LoginSignup() {
           </div>
         ) : (
           // Registration Form
-          <div>
+          <div className='mt-24'>
             <h1 className="text-3xl font-semibold mb-4">Signup Form</h1>
             <form className="space-y-4">
               <div>
-                <label className="block font-medium text-gray-900 dark:text-white">Username</label>
+                <label className="block font-medium  text-gray-900 dark:text-white">Username</label>
                 <input
                   type="text"
                   className="form-input rounded-md shadow-sm w-full py-3 px-4"
