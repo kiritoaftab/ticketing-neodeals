@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 function StaffOnboarding() {
   const [toggle, setToggle] = useState(false); // if true --> login, if false --> signup
@@ -40,14 +41,34 @@ function StaffOnboarding() {
     //checks -->
     //Password regex
 
-    console.log(`logged in`);
+    
     setLoginLoader(true);
-    // if (loginFormData.password != regFormData.confirmPassword) {
-    //   alert(`Passwords don't match`)
-    //   return
-    // }
-
+    
     console.log(loginFormData)
+
+
+    await axios
+    .post('http://localhost:4000/loginStaff', loginFormData)
+    .then((response) => {
+      console.log(response)
+      
+      const respData = response.data;
+      const status = respData.status
+      if(status === 200 ){
+        console.log(` Staff logged in successfull ${JSON.stringify(respData)}`)
+      }else if(status === 401){
+        console.log('Password entered is incorrect')
+      }else if(status === 301){
+        console.log('staff does not exist, please register')
+      }else{
+        console.log("Something went wrong during login")
+      }
+      setLoginLoader(false)
+    })
+    .catch((error) => {
+      console.error('Error logging in', error)
+      setLoginLoader(false)
+    })
 
   }
 
@@ -57,22 +78,45 @@ function StaffOnboarding() {
     //Password regex
 
     // console.log(`i am here`)
-    // setRegLoader(true)
-    // if (regFormData.password !== regFormData.confirmPassword) {
-    //   alert(`Passwords don't match`)
-    //   return
-    // }
+    setRegLoader(true)
+    if (regFormData.password !== regFormData.confirmPassword) {
+      alert(`Passwords don't match`)
+      return
+    }
     console.log(regFormData)
 
-    // const reqBody = {
-    //   firstName: regFormData.name,
-    //   email: regFormData.email,
-    //   phone: regFormData.phone,
-    //   discription: regFormData.discription,
-    //   department: regFormData.department,
-    //   birth: regFormData.birth,
-    // };
-    // console.log(reqBody);
+    const reqBody = {
+      name: regFormData.name,
+      email: regFormData.email,
+      phone: regFormData.phone,
+      password: regFormData.password,
+      department: regFormData.department,
+      education: regFormData.education,
+      dateOfBirth: regFormData.birth
+  }
+    console.log(reqBody);
+
+    await axios
+    .post('http://localhost:4000/registerStaff', reqBody)
+    .then((response) => {
+      console.log(response)
+      
+      const respData = response.data;
+      const status = respData.status
+      if(status === 200 ){
+        console.log(`Registered Staff successfull`)
+      }else if(status === 401){
+        console.log('Email is already registered')
+      }else{
+        console.log('Something went wrong')
+      }
+      setRegLoader(false)
+    })
+    .catch((error) => {
+      console.error('Error logging in', error)
+      setRegLoader(false)
+    })
+
   }
 
   return toggle ? (
@@ -285,7 +329,7 @@ function StaffOnboarding() {
           Submit
         </button>
         <div>
-          {/* {regLoader ? <h1 className='text-white'>Processing Registration ....</h1> : ``} */}
+          {regLoader ? <h1 className='text-white'>Processing Registration ....</h1> : ``}
           <button onClick={() => setToggle(true)} className="text-black mt-5">
             Already have account, login
           </button>
