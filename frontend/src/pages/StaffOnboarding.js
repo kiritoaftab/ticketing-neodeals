@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom'
 function StaffOnboarding() {
   const [toggle, setToggle] = useState(false) // if true --> login, if false --> signup
 
-  const [regEmail, setRegEmail] = useState(null)
-  const [regPassword, setRegPassword] = useState(null)
-  const [regConfirmPassword, setRegConfirmPassword] = useState(null)
   const [regFirstName, setRegFirstName] = useState(null)
-  const [regLastName, setRegLastName] = useState(null)
+  const [regEmail, setRegEmail] = useState(null)
+  const [regDateofBirth, setRegDateofBirth] = useState(null)
   const [regPhone, setRegPhone] = useState(null)
+  const [regDepartment, setRegDepartment] = useState(null)
+  const [regDiscription, setRegDiscription] = useState(null)
   const [regLoader, setRegLoader] = useState(false)
   const [loginEmail, setLoginEmail] = useState(null)
   const [loginPassword, setLoginPassword] = useState(null)
@@ -18,11 +18,11 @@ function StaffOnboarding() {
   const navigate = useNavigate()
 
   const regFormData = {
+    name: regFirstName,
     email: regEmail,
-    password: regPassword,
-    confirmPassword: regConfirmPassword,
-    firstName: regFirstName,
-    lastName: regLastName,
+    birth: regDateofBirth,
+    department: regDepartment,
+    discription: regDiscription,
     phone: regPhone,
   }
 
@@ -49,40 +49,42 @@ function StaffOnboarding() {
     }
     console.log(reqqBody)
 
-   
-   }
+
+  }
 
   async function handleRegistration() {
     // TODO : form validation later
     //checks -->
     //Password regex
 
-    console.log(`i am here`)
-    setRegLoader(true)
-    if (regFormData.password !== regFormData.confirmPassword) {
-      alert(`Passwords don't match`)
-      return
-    }
+    // console.log(`i am here`)
+    // setRegLoader(true)
+    // if (regFormData.password !== regFormData.confirmPassword) {
+    //   alert(`Passwords don't match`)
+    //   return
+    // }
 
     const reqBody = {
+      firstName:regFormData.name,
       email: regFormData.email,
-      password: regFormData.password,
       phone: regFormData.phone,
-      userName: regFormData.firstName + '_' + regFormData.lastName,
+      discription:regFormData.discription,
+      department:regFormData.department,
+      birth:regFormData.birth,
     }
     console.log(reqBody)
 
-   }
+  }
 
   return toggle ? (
     <div className="flex justify-center">
 
-      <form className="mt-10 rounded-2xl shadow-2xl px-16 py-10">
+      <form className="mt-20 rounded-2xl shadow-2xl px-16 py-10">
 
-      <h1 className="text-black text-center text-4xl font-bold mt-7">
-        Login form
+        <h1 className="text-black text-center text-3xl font-bold mt-7">
+          Login form
 
-      </h1>
+        </h1>
         <div className="mb-6 mt-7">
           <label
             htmlFor="email"
@@ -131,108 +133,66 @@ function StaffOnboarding() {
     </div>
   ) : (
     <div className='flex justify-center'>
-      
+
 
       <form className="mt-10 rounded-2xl shadow-2xl px-10 py-10">
-      <h1 className="text-black text-center text-5xl font-bold mt-10">
-        Signup form
+        <h1 className="text-black text-center text-4xl font-bold mt-4 mb-5">
+          Signup form
 
-      </h1>
+        </h1>
+        <div className="relative z-0 w-full mb-6 group">
+          <input
+            type="text"
+            name="floating_first_name"
+            id="floating_first_name"
+            className="mb-5 block py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-black dark:focus:border-black focus:outline-none focus:ring-0 focus:border-black peer"
+            placeholder=" "
+            required
+            onChange={(e) => setRegFirstName(e.target.value)}
+          />
+          <label
+            htmlFor="floating_first_name"
+            className="peer-focus:font-medium absolute text-sm text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+          >
+            Name
+          </label>
+        </div>
         <div className="relative z-0 w-full mb-6 group">
           <input
             type="email"
             name="floating_email"
             id="floating_email"
-            className="mb-5 block py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-black appearance-none dark:text-black dark:border-black dark:focus:border-black focus:outline-none focus:ring-0 focus:border-black peer"
-            placeholder=" "
+            className="block py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-black dark:focus:border-black focus:outline-none focus:ring-0 focus:border-black peer"
+            placeholder=""
             required
             onChange={(e) => setRegEmail(e.target.value)}
           />
           <label
             htmlFor="floating_email"
-            className="peer-focus:font-medium absolute text-sm text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >
-            Email address
-          </label>
-        </div>
-        <div className="relative z-0 w-full mb-6 group">
-          <input
-            type="password"
-            name="floating_password"
-            id="floating_password"
-            className="block py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-black dark:focus:border-black focus:outline-none focus:ring-0 focus:border-black peer"
-            placeholder=" "
-            required
-            onChange={(e) => setRegPassword(e.target.value)}
-          />
-          <label
-            htmlFor="floating_password"
             className="peer-focus:font-medium absolute text-sm text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"          >
-            Password
+            Email
           </label>
         </div>
 
-        <div className="relative z-0 w-full mb-6 group">
-          <input
-            type="password"
-            name="repeat_password"
-            id="floating_repeat_password"
-            className="block py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-black dark:focus:border-black focus:outline-none focus:ring-0 focus:border-black peer"
-            placeholder=" "
-            required
-            onChange={(e) => setRegConfirmPassword(e.target.value)}
-          />
-          <label
-            htmlFor="floating_repeat_password"
-            className="peer-focus:font-medium absolute text-sm text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >
-            Confirm password
-          </label>
-        </div>
-        {regPassword?.length > 0 &&
-          regConfirmPassword?.length > 0 &&
-          regPassword !== regConfirmPassword ? (
-          <h1>Passwords don't match</h1>
-        ) : (
-          ``
-        )}
         <div className="grid md:grid-cols-2 md:gap-6">
           <div className="relative z-0 w-full mb-6 group">
             <input
-              type="text"
-              name="floating_first_name"
-              id="floating_first_name"
+              type="date"
+              name="floating_birth"
+              id="floating_birth"
               className="block py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-black dark:focus:border-black focus:outline-none focus:ring-0 focus:border-black peer"
               placeholder=" "
               required
-              onChange={(e) => setRegFirstName(e.target.value)}
+              onChange={(e) => setRegDateofBirth(e.target.value)}
             />
             <label
-              htmlFor="floating_first_name"
+              htmlFor="floating_birth"
               className="peer-focus:font-medium absolute text-sm text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
-              First name
+              Date of Birth
             </label>
           </div>
-          <div className="relative z-0 w-full mb-6 group">
-            <input
-              type="text"
-              name="floating_last_name"
-              id="floating_last_name"
-              className="block py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-black dark:focus:border-black focus:outline-none focus:ring-0 focus:border-black peer"
-              placeholder=" "
-              required
-              onChange={(e) => setRegLastName(e.target.value)}
-            />
-            <label
-              htmlFor="floating_last_name"
-              className="peer-focus:font-medium absolute text-sm text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              Last name
-            </label>
-          </div>
-        </div>
-        <div className="grid md:grid-cols-2 md:gap-6">
+
           <div className="relative z-0 w-full mb-6 group">
             <input
               type="number"
@@ -250,6 +210,41 @@ function StaffOnboarding() {
               Phone number
             </label>
           </div>
+        </div>
+
+        <div className="relative z-0 w-full mb-6 group">
+          <input
+            type="text"
+            name="repeat_department"
+            id="floating_repeat_department"
+            className="block py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-black dark:focus:border-black focus:outline-none focus:ring-0 focus:border-black peer"
+            placeholder=" "
+            required
+            onChange={(e) => setRegDepartment(e.target.value)}
+          />
+          <label
+            htmlFor="floating_repeat_department"
+            className="peer-focus:font-medium absolute text-sm text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+          >
+            Department
+          </label>
+        </div>
+        <div className="relative z-0 w-full mb-6 group">
+          <input
+            type="text"
+            name="repeat_discription"
+            id="floating_repeat_discription"
+            className="block py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-black dark:focus:border-black focus:outline-none focus:ring-0 focus:border-black peer"
+            placeholder=" "
+            required
+            onChange={(e) => setRegDiscription(e.target.value)}
+          />
+          <label
+            htmlFor="floating_repeat_discription"
+            className="peer-focus:font-medium absolute text-sm text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+          >
+            Discription
+          </label>
         </div>
         <button
           type="button"
