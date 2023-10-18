@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useState,useContext,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import {stateContext} from '../context/stateContext'
 
 function StaffOnboarding() {
-  const [toggle, setToggle] = useState(false); // if true --> login, if false --> signup
+
+  const {signedUser,setSignedUser} = useContext(stateContext);
+  
+
+  const [toggle, setToggle] = useState(true); // if true --> login, if false --> signup
 
   const [regFirstName, setRegFirstName] = useState(null);
   const [regEmail, setRegEmail] = useState(null);
@@ -56,6 +61,16 @@ function StaffOnboarding() {
       const status = respData.status
       if(status === 200 ){
         console.log(` Staff logged in successfull ${JSON.stringify(respData)}`)
+        const userData = {
+          name: respData.data.name,
+          email:respData.data.email,
+          department:respData.data.department,
+          phone:respData.data.phone
+        }
+        setSignedUser(userData)
+        console.log(`Signed user ${JSON.stringify(signedUser)}`)
+
+        navigate('/dashboard')
       }else if(status === 401){
         console.log('Password entered is incorrect')
       }else if(status === 301){
@@ -105,6 +120,8 @@ function StaffOnboarding() {
       const status = respData.status
       if(status === 200 ){
         console.log(`Registered Staff successfull`)
+        alert(`Staff Account registered. Please login`)
+        setToggle(true)
       }else if(status === 401){
         console.log('Email is already registered')
       }else{
@@ -256,7 +273,6 @@ function StaffOnboarding() {
           <input
             type="text"
             name="repeat_department"
-            id="floating_repeat_department"
             className="block py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-black dark:focus:border-black focus:outline-none focus:ring-0 focus:border-black peer"
             placeholder=" "
             required
@@ -273,7 +289,6 @@ function StaffOnboarding() {
           <input
             type="text"
             name="repeat_department"
-            id="floating_repeat_department"
             className="block py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-black dark:focus:border-black focus:outline-none focus:ring-0 focus:border-black peer"
             placeholder=" "
             required
@@ -290,7 +305,6 @@ function StaffOnboarding() {
           <input
             type="password"
             name="repeat_department"
-            id="floating_repeat_department"
             className="block py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-black dark:focus:border-black focus:outline-none focus:ring-0 focus:border-black peer"
             placeholder=" "
             required
@@ -307,7 +321,6 @@ function StaffOnboarding() {
           <input
             type="password"
             name="repeat_department"
-            id="floating_repeat_department"
             className="block py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-black dark:focus:border-black focus:outline-none focus:ring-0 focus:border-black peer"
             placeholder=" "
             required

@@ -4,6 +4,7 @@ import CustomerOnboarding from "./pages/CustomerOnboarding";
 import Home from "./pages/Home";
 import StaffOnboarding from "./pages/StaffOnboarding";
 import Ticket from "./pages/Ticket";
+import StaffDashboard from "./pages/StaffDashboard";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route exact path="/customer" element={<CustomerOnboarding/>}/>
         <Route exact path="/employee" element={<StaffOnboarding/>}/>
         <Route exact path="/ticket" element={<Ticket />}/>
+        <Route exact path="/dashboard" element={<StaffDashboard/>}/>
       </Routes>
     </Router>
   );
