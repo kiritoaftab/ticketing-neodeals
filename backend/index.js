@@ -1,7 +1,8 @@
 const express = require("express"); //importing express
 require("firebase/compat/firestore");
 const cors = require('cors');
-
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 const app = express();
 app.use(express.json()); //initializing express app
 app.use(cors({  
@@ -114,8 +115,17 @@ app.post("/registerStaff", async (req, res) => {
 });
 
 async function addStaff(userData) {
-  const staffPath = doc(db, `staff/${userData.email}`);
-  const addedUser = await setDoc(staffPath, userData);
+  console.log(userData.password+"password")
+  bcrypt.hash(userData.password,saltRounds, async(err, hash)=> {
+    if(err){
+      console.log(err)
+    }
+    const staffPath = doc(db, `staff/${userData.email}`);
+    userData.password=hash
+    const addedUser = await setDoc(staffPath, userData);
+  })
+
+  
   // console.log(addedUser)
 }
 
@@ -150,33 +160,36 @@ app.post("/loginStaff", async (req, res) => {
     const email = recvData.email;
     const password = recvData.password;
 
-    const userBool = await checkIfStaffExists(email);
-
-    console.log(userBool + " if user exists");
-    if (userBool) {
-      const authenticatedUser = await authenticateStaff(email, password);
-      if (authenticatedUser) {
-        const staffDocRef = doc(db, "staff", email);
-        const userDoc = await getDoc(staffDocRef);
-        const userData = userDoc.data();
-
-        res.send({
-          msg: "Staff logged in successfully",
-          status: 200, //All okay , can proceeed
-          data: userData,
-        });
-      } else {
-        res.send({
-          msg: "Password entered is incorrect, Please try again",
-          status: 401, //Password is not correct
-        });
-      }
+    
+    const staffDocRef = doc(db, "staff", email);
+    const userDoc = await getDoc(staffDocRef);
+    
+    if (userDoc.exists()) {
+      //perform authentication
+      const userData = userDoc.data();
+      bcrypt.compare(password,userData.password,(err,response)=>{
+        console.log(response)
+        if(response){
+          res.send({
+            msg: "Staff logged in successfully",
+            status: 200, //All okay , can proceeed
+            data: userData,
+          });
+        }else{
+          res.send({
+            msg: "Password entered is incorrect, Please try again",
+            status: 401, //Password is not correct
+          });
+        }
+      })
     } else {
       res.send({
         msg: "staff does not exist, please register ",
         status: 301, // User does not exist, redirect to /register
       });
     }
+
+   
   } catch (error) {
     console.log(error);
     res.send({ msg: `cannot login ${error}` });
@@ -190,14 +203,19 @@ async function authenticateStaff(email, password) {
   if (userDoc.exists()) {
     //perform authentication
     const userData = userDoc.data();
-
-    if (password === userData.password) {
-      return true;
-    }
+    bcrypt.compare(password,userData.password,(err,response)=>{
+      console.log(response)
+      if(response){
+        return true;
+      }else{
+        return false;
+      }
+    })
   } else {
     console.log("Cannot authenticate user, as document does not exist");
+    return false;
   }
-  return false;
+  
 }
 
 
