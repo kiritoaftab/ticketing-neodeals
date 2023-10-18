@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function LoginSignup() {
@@ -80,28 +80,37 @@ function LoginSignup() {
 
     setRegLoader(true);
 
-    // const reqBody = {
-    //   username: regUsername,
-    //   name: regName,
-    //   email: regEmail,
-    //   phone: regPhoneNumber,
-    //   password: regPassword,
-    //   address: regAddress,
-    // };
+    const reqBody = {
+      username: regUsername,
+      name: regName,
+      email: regEmail,
+      phone: regPhoneNumber,
+      password: regPassword,
+      address: regAddress,
+    };
 
-    // try {
-    //   const response = await axios.post('http://your-api-url.com/register', reqBody);
-
-    //   if (response.data.status === 201) {
-    //     // Successful registration
-    //     navigate('/dashboard'); // Redirect to the dashboard or desired page
-    //   } else {
-    //     alert('Registration failed. Please try again.');
-    //   }
-    // } catch (error) {
-    //   console.error('Error registering', error);
-    //   alert('An error occurred while registering.');
-    // }
+    await axios
+    .post('http://localhost:4000/register', reqBody)
+    .then((response) => {
+      console.log(response)
+      
+      const respData = response.data;
+      const status = respData.status
+      if(status === 200 ){
+        console.log(`Registered User successfull`)
+        alert(`User Account registered. Please login`)
+        setToggle(true)
+      }else if(status === 401){
+        console.log('Username is already registered')
+      }else{
+        console.log('Something went wrong')
+      }
+      setRegLoader(false)
+    })
+    .catch((error) => {
+      console.error('Error logging in', error)
+      setRegLoader(false)
+    })
 
     setRegLoader(false);
   }
