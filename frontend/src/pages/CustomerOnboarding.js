@@ -24,13 +24,13 @@ function LoginSignup() {
 
   const regFormData = {
     username: regUsername,
-    name:regName,
-    email:regEmail,
-    phone:regPhoneNumber,
-    password:regPassword,
-    confirmPassword:regConfirmPassword,
-    address:regAddress
-  }
+    name: regName,
+    email: regEmail,
+    phone: regPhoneNumber,
+    password: regPassword,
+    confirmPassword: regConfirmPassword,
+    address: regAddress,
+  };
 
   async function handleLogin() {
     // Form validation (you can add more validation as needed)
@@ -46,7 +46,7 @@ function LoginSignup() {
       password: loginPassword,
     };
 
-    console.log(reqBody)
+    console.log(reqBody);
     // try {
     //   const response = await axios.post('http://your-api-url.com/login', reqBody);
 
@@ -65,7 +65,7 @@ function LoginSignup() {
   }
 
   async function handleRegistration() {
-    // Form validation 
+    // Form validation
     if (!regUsername || !regName || !regEmail || !regPhoneNumber || !regPassword || !regConfirmPassword || !regAddress) {
       alert('Please fill in all required fields.');
       return;
@@ -76,7 +76,7 @@ function LoginSignup() {
       return;
     }
 
-    console.log(regFormData)
+    console.log(regFormData);
 
     setRegLoader(true);
 
@@ -121,13 +121,13 @@ function LoginSignup() {
         {/* Login Form */}
         {toggle ? (
           <div>
-            <h1 className="text-3xl font-semibold mb-4">Login Form</h1>
+            <h1 className="text-3xl font-semibold font-serif mb-4">Login Form</h1>
             <form className="space-y-4">
               <div>
                 <label className="block font-medium text-gray-900 dark:text-white">Username</label>
                 <input
                   type="text"
-                  className="form-input rounded-md shadow-sm w-full py-3 px-4"
+                  className="form-input rounded-md border border-gray-300 shadow-sm w-full py-3 px-4"
                   placeholder="Enter your username"
                   value={loginUsername}
                   onChange={(e) => setLoginUsername(e.target.value)}
@@ -137,7 +137,7 @@ function LoginSignup() {
                 <label className="block font-medium text-gray-900 dark:text-white">Password</label>
                 <input
                   type="password"
-                  className="form-input rounded-md shadow-sm w-full py-3 px-4"
+                  className="form-input rounded-md border border-gray-300 shadow-sm w-full py-3 px-4"
                   placeholder="Enter your password"
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
@@ -159,14 +159,14 @@ function LoginSignup() {
         ) : (
           // Registration Form
           <div className='mt-24'>
-            <h1 className="text-3xl font-semibold mb-4">Signup Form</h1>
+            <h1 className="text-3xl  font-semibold font-serif mb-4">Signup Form</h1>
             <form className="space-y-4">
               <div>
-                <label className="block font-medium  text-gray-900 dark:text-white">Username</label>
+                <label className="block font-medium text-gray-900 dark:text-white">Username</label>
                 <input
                   type="text"
-                  className="form-input rounded-md shadow-sm w-full py-3 px-4"
-                  placeholder=""
+                  className="form-input rounded-md border border-gray-300 shadow-sm w-full py-3 px-4"
+                  placeholder="create a username"
                   value={regUsername}
                   onChange={(e) => setRegUsername(e.target.value)}
                 />
@@ -175,8 +175,8 @@ function LoginSignup() {
                 <label className="block font-medium text-gray-900 dark:text-white">Name</label>
                 <input
                   type="text"
-                  className="form-input rounded-md shadow-sm w-full py-3 px-4"
-                  placeholder=""
+                  className="form-input rounded-md border border-gray-300 shadow-sm w-full py-3 px-4"
+                  placeholder="Enter your Full name"
                   value={regName}
                   onChange={(e) => setRegName(e.target.value)}
                 />
@@ -185,8 +185,8 @@ function LoginSignup() {
                 <label className="block font-medium text-gray-900 dark:text-white">Email</label>
                 <input
                   type="email"
-                  className="form-input rounded-md shadow-sm w-full py-3 px-4"
-                  placeholder=""
+                  className="form-input rounded-md border border-gray-300 shadow-sm w-full py-3 px-4"
+                  placeholder="name@gmail.com"
                   value={regEmail}
                   onChange={(e) => setRegEmail(e.target.value)}
                 />
@@ -195,8 +195,8 @@ function LoginSignup() {
                 <label className="block font-medium text-gray-900 dark:text-white">Phone Number</label>
                 <input
                   type="text"
-                  className="form-input rounded-md shadow-sm w-full py-3 px-4"
-                  placeholder=""
+                  className="form-input rounded-md border border-gray-300 shadow-sm w-full py-3 px-4"
+                  placeholder="Enter your Phone number"
                   value={regPhoneNumber}
                   onChange={(e) => setRegPhoneNumber(e.target.value)}
                 />
@@ -205,8 +205,8 @@ function LoginSignup() {
                 <label className="block font-medium text-gray-900 dark:text-white">Password</label>
                 <input
                   type="password"
-                  className="form-input rounded-md shadow-sm w-full py-3 px-4"
-                  placeholder="........"
+                  className="form-input rounded-md border border-gray-300 shadow-sm w-full py-3 px-4"
+                  placeholder="Create password"
                   value={regPassword}
                   onChange={(e) => setRegPassword(e.target.value)}
                 />
@@ -215,8 +215,8 @@ function LoginSignup() {
                 <label className="block font-medium text-gray-900 dark:text-white">Confirm Password</label>
                 <input
                   type="password"
-                  className="form-input rounded-md shadow-sm w-full py-3 px-4"
-                  placeholder="........"
+                  className="form-input rounded-md border border-gray-300 shadow-sm w-full py-3 px-4"
+                  placeholder="Confirm your created password"
                   value={regConfirmPassword}
                   onChange={(e) => setRegConfirmPassword(e.target.value)}
                 />
@@ -225,8 +225,8 @@ function LoginSignup() {
                 <label className="block font-medium text-gray-900 dark:text-white">Address</label>
                 <input
                   type="text"
-                  className="form-input rounded-md shadow-sm w-full py-3 px-4"
-                  placeholder=""
+                  className="form-input rounded-md border border-gray-300 shadow-sm w-full py-3 px-4"
+                  placeholder="Enter your address"
                   value={regAddress}
                   onChange={(e) => setRegAddress(e.target.value)}
                 />
