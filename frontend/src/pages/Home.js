@@ -16,7 +16,7 @@ function Home() {
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100">
       {/* Welcome Message */}
-      <h1 className="font-serif text-5xl text-yellow-500 mb-8">Welcome to the Ticketing System</h1>
+      <h1 className="font-serif text-5xl text-yellow-500 mb-8">Welcome to Ticketing System</h1>
 
       <div className="max-w-screen-lg mx-auto flex justify-center">
         {/* Customer Signup Card */}
