@@ -1,12 +1,12 @@
-import React, { useState,useContext,useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import {stateContext} from '../context/stateContext'
+import { stateContext } from '../context/stateContext'
 
 function StaffOnboarding() {
 
-  const {signedUser,setSignedUser} = useContext(stateContext);
-  
+  const { signedUser, setSignedUser } = useContext(stateContext);
+
 
   const [toggle, setToggle] = useState(true); // if true --> login, if false --> signup
 
@@ -31,8 +31,8 @@ function StaffOnboarding() {
     birth: regDateofBirth,
     department: regDepartment,
     education: regEducationLevel,
-    password:regPassword,
-    confirmPassword:regConfirmPassword,
+    password: regPassword,
+    confirmPassword: regConfirmPassword,
     phone: regPhone,
   };
 
@@ -46,44 +46,44 @@ function StaffOnboarding() {
     //checks -->
     //Password regex
 
-    
+
     setLoginLoader(true);
-    
+
     console.log(loginFormData)
 
 
     await axios
-    .post('http://localhost:4000/loginStaff', loginFormData)
-    .then((response) => {
-      console.log(response)
-      
-      const respData = response.data;
-      const status = respData.status
-      if(status === 200 ){
-        console.log(` Staff logged in successfull ${JSON.stringify(respData)}`)
-        const userData = {
-          name: respData.data.name,
-          email:respData.data.email,
-          department:respData.data.department,
-          phone:respData.data.phone
-        }
-        setSignedUser(userData)
-        console.log(`Signed user ${JSON.stringify(signedUser)}`)
+      .post('http://localhost:4000/loginStaff', loginFormData)
+      .then((response) => {
+        console.log(response)
 
-        navigate('/dashboard')
-      }else if(status === 401){
-        console.log('Password entered is incorrect')
-      }else if(status === 301){
-        console.log('staff does not exist, please register')
-      }else{
-        console.log("Something went wrong during login")
-      }
-      setLoginLoader(false)
-    })
-    .catch((error) => {
-      console.error('Error logging in', error)
-      setLoginLoader(false)
-    })
+        const respData = response.data;
+        const status = respData.status
+        if (status === 200) {
+          console.log(` Staff logged in successfull ${JSON.stringify(respData)}`)
+          const userData = {
+            name: respData.data.name,
+            email: respData.data.email,
+            department: respData.data.department,
+            phone: respData.data.phone
+          }
+          setSignedUser(userData)
+          console.log(`Signed user ${JSON.stringify(signedUser)}`)
+
+          navigate('/dashboard')
+        } else if (status === 401) {
+          console.log('Password entered is incorrect')
+        } else if (status === 301) {
+          console.log('staff does not exist, please register')
+        } else {
+          console.log("Something went wrong during login")
+        }
+        setLoginLoader(false)
+      })
+      .catch((error) => {
+        console.error('Error logging in', error)
+        setLoginLoader(false)
+      })
 
   }
 
@@ -108,31 +108,31 @@ function StaffOnboarding() {
       department: regFormData.department,
       education: regFormData.education,
       dateOfBirth: regFormData.birth
-  }
+    }
     console.log(reqBody);
 
     await axios
-    .post('http://localhost:4000/registerStaff', reqBody)
-    .then((response) => {
-      console.log(response)
-      
-      const respData = response.data;
-      const status = respData.status
-      if(status === 200 ){
-        console.log(`Registered Staff successfull`)
-        alert(`Staff Account registered. Please login`)
-        setToggle(true)
-      }else if(status === 401){
-        console.log('Email is already registered')
-      }else{
-        console.log('Something went wrong')
-      }
-      setRegLoader(false)
-    })
-    .catch((error) => {
-      console.error('Error logging in', error)
-      setRegLoader(false)
-    })
+      .post('http://localhost:4000/registerStaff', reqBody)
+      .then((response) => {
+        console.log(response)
+
+        const respData = response.data;
+        const status = respData.status
+        if (status === 200) {
+          console.log(`Registered Staff successfull`)
+          alert(`Staff Account registered. Please login`)
+          setToggle(true)
+        } else if (status === 401) {
+          console.log('Email is already registered')
+        } else {
+          console.log('Something went wrong')
+        }
+        setRegLoader(false)
+      })
+      .catch((error) => {
+        console.error('Error logging in', error)
+        setRegLoader(false)
+      })
 
   }
 
@@ -176,7 +176,9 @@ function StaffOnboarding() {
 
         <button
           type="button"
-          className="text-white bg-orange-400 hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-orange-600 dark:hover:bg-orange-600 dark:focus:ring-orange-800"
+          // className="text-white bg-orange-400 hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-orange-600 dark:hover:bg-orange-600 dark:focus:ring-orange-800"
+          className="inline-flex items-center justify-center w-full px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-yellow-500 rounded-lg focus-ring-4 focus-ring-yellow-200 dark-focus-ring-yellow-900 hover-bg-yellow-600"
+
           onClick={handleLogin}
         >
           Login
@@ -193,7 +195,7 @@ function StaffOnboarding() {
   ) : (
     <div className="flex justify-center">
       <form className="mt-10 rounded-2xl shadow-2xl px-10 py-10">
-        <h1 className="text-black text-center text-4xl font-bold mt-4 mb-5">
+        <h1 className="text-black text-center text-3xl font-bold mt-4 mb-5">
           Staff Registration form
         </h1>
         <div className="relative z-0 w-full mb-6 group">
@@ -208,7 +210,7 @@ function StaffOnboarding() {
           />
           <label
             htmlFor="floating_first_name"
-            className="peer-focus:font-medium absolute text-sm text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            className="peer-focus:font-medium absolute text-lg text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
           >
             Name
           </label>
@@ -225,7 +227,7 @@ function StaffOnboarding() {
           />
           <label
             htmlFor="floating_email"
-            className="peer-focus:font-medium absolute text-sm text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            className="peer-focus:font-medium absolute text-lg text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
           >
             Email
           </label>
@@ -244,7 +246,7 @@ function StaffOnboarding() {
             />
             <label
               htmlFor="floating_birth"
-              className="peer-focus:font-medium absolute text-sm text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+              className="peer-focus:font-medium absolute text-lg text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Date of Birth
             </label>
@@ -262,29 +264,48 @@ function StaffOnboarding() {
             />
             <label
               htmlFor="floating_phone"
-              className="peer-focus:font-medium absolute text-sm text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+              className="peer-focus:font-medium absolute text-lg text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Phone number
             </label>
           </div>
         </div>
         {/* TODO : Select and option ( Cloud, Development, Digital Marketing, Hosting, Deployment, Infrastructure, Support ) */}
-        <div className="relative z-0 w-full mb-6 group">
-          <input
-            type="text"
-            name="repeat_department"
-            className="block py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-black dark:focus:border-black focus:outline-none focus:ring-0 focus:border-black peer"
-            placeholder=" "
-            required
-            onChange={(e) => setRegDepartment(e.target.value)}
-          />
+        <div className="relative  z-100 w-full mb-6 group">
           <label
             htmlFor="floating_repeat_department"
-            className="peer-focus:font-medium absolute text-sm text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            className="peer-focus:font-medium absolute text-lg text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
           >
             Department
           </label>
+          <div className="relative">
+            <input
+              type="text"
+              name="repeat_department"
+              className="block  py-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-black dark:focus:border-black focus:outline-none focus:ring-0 focus:border-black peer"
+              placeholder=" "
+              required
+              onChange={(e) => setRegDepartment(e.target.value)}
+            />
+            <select
+              name="category"
+              id="category"
+              className="absolute text-black inset-0 text-sm opacity-100 w-full h-full cursor-pointer top-3 "
+              onChange={(e) => setRegDepartment(e.target.value)}
+            >
+              <option value="" >SELECT DEPARTMENT</option>
+              <option value="development">Development</option>
+              <option value="deployment">Deployment</option>
+              <option value="cloud">Cloud</option>
+              <option value="infrastructure">Infrastructure</option>
+              <option value="digital-marketing">Digital Marketing</option>
+              <option value="app-development">App Development</option>
+              <option value="software-solutions">Software Solutions</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
         </div>
+
         <div className="relative z-0 w-full mb-6 group">
           <input
             type="text"
@@ -296,7 +317,7 @@ function StaffOnboarding() {
           />
           <label
             htmlFor="floating_repeat_department"
-            className="peer-focus:font-medium absolute text-sm text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            className="peer-focus:font-medium absolute text-lg text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
           >
             Education Level
           </label>
@@ -312,7 +333,7 @@ function StaffOnboarding() {
           />
           <label
             htmlFor="floating_repeat_department"
-            className="peer-focus:font-medium absolute text-sm text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            className="peer-focus:font-medium absolute text-lg text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
           >
             Password
           </label>
@@ -328,7 +349,7 @@ function StaffOnboarding() {
           />
           <label
             htmlFor="floating_repeat_department"
-            className="peer-focus:font-medium absolute text-sm text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            className="peer-focus:font-medium absolute text-lg text-black dark:text-black duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-black peer-focus:dark:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
           >
             Confirm Password
           </label>
@@ -336,7 +357,9 @@ function StaffOnboarding() {
 
         <button
           type="button"
-          className="text-white bg-orange-400 hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-orange-600 dark:hover:bg-orange-600 dark:focus:ring-orange-800"
+          // className="text-white bg-orange-400 hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-orange-600 dark:hover:bg-orange-600 dark:focus:ring-orange-800"
+          className="inline-flex items-center justify-center w-full px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-yellow-500 rounded-lg focus-ring-4 focus-ring-yellow-200 dark-focus-ring-yellow-900 hover-bg-yellow-600"
+
           onClick={handleRegistration}
         >
           Submit
