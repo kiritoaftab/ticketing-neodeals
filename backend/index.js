@@ -390,6 +390,47 @@ async function updateTicketCounter(category){
   }
 }
 
+app.get(`/getDeptTickets`,async(req,res)=>{
+  try {
+      console.log(req.body)
+      const reqBody = req.body
+      const dept = reqBody.department
+      
+
+      if (DEPARTMENTS_SET[dept] !== true) {
+          return res.json({
+            status: "501",
+            message: `${dept} department is invalid`,
+          });
+        }
+      const ticketsList = await getTicketsForDept(dept);
+      return res.json({code:200,message:`all good`, data: ticketsList})
+  } catch (error) {
+      return res.json({code:500,message:`${JSON.stringify(error)}`})
+  }
+})
+
+async function getTicketsForDept(dept){
+  const deptTicketsCollection = collection(db,"tickets",dept,"tix")
+
+  const ticketsQuery = query(
+      deptTicketsCollection
+  )
+  
+  const ticketsSnap = await getDocs(ticketsQuery)
+
+  var ticketsList = []
+  ticketsSnap.forEach((snap)=> {
+      var snapDoc = {}
+      // console.log(`Document has id ${snap.id} contains data ${JSON.stringify(snap.data())}`)
+      snapDoc[snap.id]= snap.data()
+      // console.log(`Document is ${JSON.stringify(snapDoc)}`)
+      ticketsList.push(snapDoc)
+  })
+  // console.log(`Ticket list is ${JSON.stringify(ticketsList)}`)
+  return ticketsList
+}
+
 const port = 4000;
 
 app.listen(port, () => console.log("Up and running on  http://localhost:4000"));
