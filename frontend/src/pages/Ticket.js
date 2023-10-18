@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 
 function Ticket() {
@@ -13,16 +14,44 @@ function Ticket() {
   });
 
   const [formSubmitSuccess, setFormSubmitSuccess] = useState(false);
-
+  const [ticketNo, setTicketNo] = useState(null);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log(formData)
-    setFormSubmitSuccess(true); 
+    
+
+    const reqBody ={
+      name:formData.name,
+      email:formData.email,
+      phone:formData.phoneNumber,
+      city:formData.city,
+      area:formData.area,
+      title: formData.title,
+      desc: formData.description,
+      category: formData.category.toUpperCase(),
+      // "files": [
+      //     "https://firebasestorage.googleapis.com/v0/b/ticketing-system-bdf85.appspot.com/o/Mohammed%20Mazhar%20(2JI19EE008).pdf?alt=media&token=883630cd-008c-4628-b30c-5ca27df50d85",
+      //     "https://firebasestorage.googleapis.com/v0/b/ticketing-system-bdf85.appspot.com/o/almohchem.png?alt=media&token=72066a14-03ac-4a3c-a747-b2020bd06933"
+      // ]
+  }
+  console.log(reqBody)
+    await axios.post('http://localhost:4000/addTicket',reqBody)
+    .then(response => {
+      console.log(response)
+      const status = response.data.status
+      if(status === 200){
+        setFormSubmitSuccess(true); 
+        setTicketNo(response.data.tix)
+      }
+      
+    })
+    .catch(err => console.log(err))
+
+    
   };
 
   return (
@@ -137,9 +166,9 @@ function Ticket() {
                 <option value="deployment">Deployment</option>
                 <option value="cloud">Cloud</option>
                 <option value="infrastructure">Infrastructure</option>
-                <option value="digital-marketing">Digital Marketing</option>
-                <option value="app-development">App Development</option>
-                <option value="software-solutions">Software Solutions</option>
+                <option value="digital_marketing">Digital Marketing</option>
+                <option value="app_development">App Development</option>
+                <option value="software_solutions">Software Solutions</option>
                 <option value="other">Other</option>
               </select>
             </div>
@@ -167,6 +196,7 @@ function Ticket() {
           </button>
         </form>
       </div>
+      {ticketNo? <h1>Ticket Generated with Ticket No - {ticketNo}</h1>:``}
     </div>
   );
 }

@@ -5,6 +5,14 @@ import {stateContext} from '../context/stateContext'
 
 function StaffOnboarding() {
 
+  
+
+  useEffect(()=> {
+    // axios.get("http://localhost:4000/loginStaff").then((response)=>{
+    //   console.log(response)
+    // });
+  },[])
+
   const {signedUser,setSignedUser} = useContext(stateContext);
   
 
@@ -51,7 +59,7 @@ function StaffOnboarding() {
     
     console.log(loginFormData)
 
-
+    axios.defaults.withCredentials = true;
     await axios
     .post('http://localhost:4000/loginStaff', loginFormData)
     .then((response) => {
@@ -135,6 +143,8 @@ function StaffOnboarding() {
     })
 
   }
+
+  
 
   return toggle ? (
     <div className="flex justify-center">
