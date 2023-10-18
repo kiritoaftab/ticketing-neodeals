@@ -313,6 +313,83 @@ async function addUser(userData) {
   // console.log(addedUser)
 }
 
+app.post("/addTicket", async (req, res) => {
+  try {
+      const reqBody = req.body;
+      
+      const category = reqBody.category;
+      if (DEPARTMENTS_SET[category] !== true) {
+        return res.json({
+          status: "501",
+          message: `${category} category is invalid`,
+        });
+      }
+      const date = new Date()
+      reqBody['date']=date.toDateString();
+      reqBody['STATUS']= `OPEN`;
+      const ticketNo =await generateTicketNumber(category);
+      if(!await addTicket(ticketNo,reqBody,"",category)){
+          return res.json({status:500, message: `Something went wrong check logs`})
+      }
+      updateTicketCounter(category);
+      
+  
+      return res.json({ status: 200, message: "All good", tix: ticketNo });
+  } catch (error) {
+      return res.json({status: 500, message: `${error}` })
+  }
+  });
+
+  async function generateTicketNumber(category) {
+    const deptCounter = doc(db, `counter`, `ticketCounter`);
+    const counterSnap = await getDoc(deptCounter);
+    if (counterSnap.exists()) {
+      const counterData = counterSnap.data();
+          if (!counterData[category]) {
+          counterData[category] = 1;
+          } else {
+          counterData[category]++;
+          }
+          const categoryCode = category.substring(0, 3).toUpperCase();
+          const ticketNumber = counterData[category].toString().padStart(5, "0");
+          // console.log(`Unique Ticket number -- ${categoryCode}-${ticketNumber}`)
+          return `${categoryCode}-${ticketNumber}`
+    } else {
+      console.log("No such document!");
+    }
+  }
+
+  async function addTicket(ticketNo,ticketData,username,category){
+    try {
+        // const userTicketPath = doc(db,`users/${username}/tickets/${ticketNo}`)
+        // const addedTicket =await setDoc(userTicketPath,ticketData)
+        const deptTicketPath = doc(db,`tickets/${category}/tix/${ticketNo}`)
+        const ticketAdded = await setDoc(deptTicketPath,ticketData)
+        return true;
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
+}
+
+async function updateTicketCounter(category){
+  const deptCounterPath = doc(db,`counter`,`ticketCounter`)
+  const counterSnap = await getDoc(deptCounterPath)
+  if(counterSnap.exists()){
+      const counterData = counterSnap.data();
+      // console.log(`${JSON.stringify(counterData)} -- counter data from DB`)
+      if(!counterData[category]){
+          counterData[category]=1
+      }else{
+          counterData[category]++;
+      }
+      // console.log(`Updating ticket counter ${JSON.stringify(counterData)}`)
+      setDoc(deptCounterPath,counterData)
+  }else{
+      console.log(`No such document`)
+  }
+}
+
 const port = 4000;
 
 app.listen(port, () => console.log("Up and running on  http://localhost:4000"));
