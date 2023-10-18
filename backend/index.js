@@ -1,13 +1,33 @@
 const express = require("express"); //importing express
 require("firebase/compat/firestore");
 const cors = require('cors');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser')
+const session = require('express-session')
+
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const app = express();
 app.use(express.json()); //initializing express app
 app.use(cors({  
-    origin: '*'
+    origin: ["http://localhost:3000"],
+    methods:["GET","POST"],
+    credentials:true
 }));
+app.use(bodyParser.json())
+app.use(cookieParser())
+app.use(express.urlencoded({extended:true}))
+
+app.use(session({
+  secret:"orbit",
+  resave:false,
+  saveUninitialized:false,
+  cookie:{
+    secure:false,
+    maxAge:1000* 60 * 60 * 2,
+  },
+}
+));
 
 const firebase = require("firebase/compat/app");
 
@@ -115,7 +135,7 @@ app.post("/registerStaff", async (req, res) => {
 });
 
 async function addStaff(userData) {
-  console.log(userData.password+"password")
+  
   bcrypt.hash(userData.password,saltRounds, async(err, hash)=> {
     if(err){
       console.log(err)
@@ -159,7 +179,7 @@ app.post("/loginStaff", async (req, res) => {
     );
     const email = recvData.email;
     const password = recvData.password;
-
+    
     
     const staffDocRef = doc(db, "staff", email);
     const userDoc = await getDoc(staffDocRef);
@@ -170,10 +190,21 @@ app.post("/loginStaff", async (req, res) => {
       bcrypt.compare(password,userData.password,(err,response)=>{
         console.log(response)
         if(response){
+          
+          //Creating a session
+          
+          req.session.userid = {
+            email:userData.email,
+            department:userData.department,
+            name:userData.name,
+            phone:userData.phone
+          }
+          
+          console.log(req.session)
           res.send({
             msg: "Staff logged in successfully",
             status: 200, //All okay , can proceeed
-            data: userData,
+            data: req.session.userid,
           });
         }else{
           res.send({
@@ -195,6 +226,20 @@ app.post("/loginStaff", async (req, res) => {
     res.send({ msg: `cannot login ${error}` });
   }
 });
+
+app.get("/loginStaff",(req,res)=>{
+  //console.log(req.session)
+  if(req.session.userid){
+    return res.json({
+      valid:true,
+      userData: req.session.userid
+    })
+  }else{
+    return res.json({
+      valid:false,
+    })
+  }
+})
 
 async function authenticateStaff(email, password) {
   const staffDocRef = doc(db, "staff", email);
@@ -218,7 +263,55 @@ async function authenticateStaff(email, password) {
   
 }
 
+app.post("/register", async (req, res) => {
+  //Register user POST api
+  try {
+    console.log(req.body);
+    const reqBody = req.body;
+    const username = reqBody.username;
+    if (await checkIfUserExists(username)) {
+      res.send({
+        status: 401,
+        message: `User with - ${username} already exists try with another username`,
+      });
+    } else {
+      await addUser(reqBody);
+      console.log(`User got added - ${username}`);
+      res.send({
+        status: 200,
+        message: `User got added - ${username}`,
+      });
+    }
+  } catch (error) {
+    res.send(`error occured ${error}`);
+  }
+});
 
+async function checkIfUserExists(username) {
+  console.log(`Checking if username already exists ${username}`);
+  if(username === undefined || username.length <1){
+    return false;
+  }
+  const userDocRef = doc(db, "users", username);
+  const userDoc = await getDoc(userDocRef);
+  if (userDoc.exists()) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+async function addUser(userData) {
+  bcrypt.hash(userData.password,saltRounds, async(err, hash)=> {
+    if(err){
+      console.log(err)
+    }
+    const userPath = doc(db, `users/${userData.username}`);
+    userData.password=hash
+    const addedUser = await setDoc(userPath, userData);
+  })
+  // console.log(addedUser)
+}
 
 const port = 4000;
 
