@@ -324,6 +324,8 @@ app.post("/addTicket", async (req, res) => {
           message: `${category} category is invalid`,
         });
       }
+      const date = new Date()
+      reqBody['date']=date.toDateString();
       reqBody['STATUS']= `OPEN`;
       const ticketNo =await generateTicketNumber(category);
       if(!await addTicket(ticketNo,reqBody,"",category)){
@@ -332,7 +334,7 @@ app.post("/addTicket", async (req, res) => {
       updateTicketCounter(category);
       
   
-      return res.json({ status: 200, message: "All good" });
+      return res.json({ status: 200, message: "All good", tix: ticketNo });
   } catch (error) {
       return res.json({status: 500, message: `${error}` })
   }
