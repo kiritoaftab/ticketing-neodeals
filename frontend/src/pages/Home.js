@@ -33,7 +33,7 @@ function Home() {
                 <p className="mb-3 font-normal text-gray-700 dark-text-gray-400">Sign up as a customer.</p>
                 <a
                   href="/customer"
-                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-yellow-500 rounded-lg hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark-bg-blue-600 dark-hover-bg-blue-700 dark-focus-ring-blue-800"
+                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-yellow-500 rounded-lg hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-yellow-700 dark-bg-yellow-600 dark-hover-bg-yellow-700 dark-focus-ring-yellow-700"
                 >
                   Let's Start
                 </a>
