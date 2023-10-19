@@ -165,6 +165,7 @@ function Ticket() {
                 <option value="development">Development</option>
                 <option value="deployment">Deployment</option>
                 <option value="cloud">Cloud</option>
+                <option value="design">Design</option>
                 <option value="infrastructure">Infrastructure</option>
                 <option value="digital_marketing">Digital Marketing</option>
                 <option value="app_development">App Development</option>

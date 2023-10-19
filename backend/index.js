@@ -390,9 +390,9 @@ async function updateTicketCounter(category){
   }
 }
 
-app.get(`/getDeptTickets`,async(req,res)=>{
+app.post(`/getDeptTickets`,async(req,res)=>{
   try {
-      console.log(req.body)
+      
       const reqBody = req.body
       const dept = reqBody.department
       
@@ -430,6 +430,64 @@ async function getTicketsForDept(dept){
   // console.log(`Ticket list is ${JSON.stringify(ticketsList)}`)
   return ticketsList
 }
+
+function getDepartmentByTicketNo(ticketNo){
+  const ticketPrefix = ticketNo.substring(0, 3);
+
+  // Check if the extracted prefix matches any department in DEPARTMENTS_SET
+  for (const department in DEPARTMENTS_SET) {
+    if (ticketPrefix === department.substring(0, 3)) {
+      return department;
+    }
+  }
+
+  // If no department is found, return null or a default value
+  return null; // Or you can return a default department, e.g., 'UNKNOWN'
+
+}
+
+app.post(`/getTicket`,async (req,res)=>{
+  try {
+    const reqBody = req.body;
+    const ticketNo = reqBody.ticketNo;
+
+    const dept = getDepartmentByTicketNo(ticketNo)
+    console.log(`Department - ${dept}`)
+    if(!dept){
+      return res.json({
+        status:401,
+        msg:`Invalid ticket number - ${ticketNo}`
+      })
+    }
+    
+    const tixDocRef = doc(db,"tickets",dept,"tix",ticketNo)
+    const tixDoc = await getDoc(tixDocRef)
+
+    if(tixDoc.exists()){
+
+      const tixData = tixDoc.data()
+
+      res.send({
+        status:200,
+        msg:`All good`,
+        data:tixData
+      })
+      
+    }else{
+      res.send({
+        status:401,
+        msg:`No such ticket found under ${dept} -- ${ticketNo}`
+      })
+    }
+    
+  } catch (error) {
+    console.log(error)
+    res.send({
+      status: 500,
+      msg:error
+    })
+  }
+})
 
 const port = 4000;
 

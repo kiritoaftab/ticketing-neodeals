@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import StaffOnboarding from "./pages/StaffOnboarding";
 import Ticket from "./pages/Ticket";
 import StaffDashboard from "./pages/StaffDashboard";
+import TicketDetails from "./pages/TicketDetails";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route exact path="/employee" element={<StaffOnboarding/>}/>
         <Route exact path="/ticket" element={<Ticket />}/>
         <Route exact path="/dashboard" element={<StaffDashboard/>}/>
+        <Route exact path="/ticket/:tno" element={<TicketDetails/>} />
       </Routes>
     </Router>
   );

@@ -3,6 +3,16 @@ import { stateContext } from "../context/stateContext";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
+const styles = {
+  tableWrapper: `relative overflow-x-auto shadow-md sm:rounded-lg flex justify-center mt-20`,
+  table: `relative overflow-x-auto shadow-md sm:rounded-lg  basis-auto`,
+  tableHeader: `text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400`,
+  tableHeadData: `px-6 py-3`,
+  tableRow: `bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600`,
+  link: `font-medium text-blue-600 dark:text-blue-500 hover:underline`,
+};
+
 function StaffDashboard() {
   const { signedUser, setSignedUser } = useContext(stateContext);
   console.log(`Signed user ${JSON.stringify(signedUser)}`);
@@ -16,62 +26,50 @@ function StaffDashboard() {
 
   const checkLoginStatus = async () => {
     try {
-      const response = await fetch('http://localhost:4000/loginStaff', {
-        method: 'GET',
+      const response = await axios.get("http://localhost:4000/loginStaff", {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
-      
-      if (!response.ok) {
-        console.log(`Failed to check login status`)
+
+      if (!response.data.valid) {
+        navigate("/employee");
+        console.log("Failed to check login status");
+        return;
       }
-  
-      const data = await response.json();
-      if (data.valid) {
-        // User is logged in, proceed to the next API call
-        // setUserData(data.userData)
-        console.log(data.userData)
-        callSecondAPI(data.userData.department);
-      } else {
-        //Navigate to Login page
-        // navigate('/employee')
-      }
+
+      const department = response.data.userData.department;
+      await callSecondAPI(department);
+      setUserData(response.data.userData);
     } catch (error) {
-      console.error('Error checking login status:', error);
+      console.error("Error checking login status:", error);
     }
   };
-  
+
   const callSecondAPI = async (department) => {
-    console.log(`Calling Second api`)
     try {
-      const response = await fetch('http://localhost:4000/getDeptTickets', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: { department: department },
-      });
-  
-      if (!response.ok) {
-        console.log(`Unable to get Tickets for department`)
-      }
-  
-      const data = await response.json();
-      console.log(data+"some data") 
+      const response = await axios.post(
+        `http://localhost:4000/getDeptTickets`,
+        {
+          department: department,
+        }
+      );
 
+      if (!response.data) {
+        console.log("Unable to get Tickets for department");
+        return;
+      }
+
+      console.log(response.data); // Log the data received from the second API
+      setTicketList(response.data.data);
     } catch (error) {
-      console.error('Error fetching tickets:', error);
+      console.error("Error fetching tickets:", error);
     }
   };
-  
-  useEffect( ()=>{
 
+  useEffect(() => {
     checkLoginStatus();
-    
-  },[])
-
-
+  }, []);
 
   return (
     <>
@@ -155,68 +153,70 @@ function StaffDashboard() {
         </div>
       </nav>
 
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg ml-10 mr-10">
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      {/* Table wrapper */}
+      <div className={styles.tableWrapper}>
+        <table className={styles.table}>
+          <thead className={styles.tableHeader}>
             <tr>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className={styles.tableHeadData}>
                 Ticket No
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className={styles.tableHeadData}>
                 Title
               </th>
-              <th scope="col" className="px-6 py-3">
-                <div className="flex items-center">
-                  Category
-                  <a href="#">
-                    <svg
-                      className="w-3 h-3 ml-1.5"
-                      aria-hidden="true"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" />
-                    </svg>
-                  </a>
-                </div>
+              <th scope="col" className={styles.tableHeadData}>
+                Category
               </th>
-
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className={styles.tableHeadData}>
                 Date
               </th>
-              <th scope="col" className="px-6 py-3">
-                Status
-              </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className={styles.tableHeadData}>
                 Assigned
+              </th>
+              <th scope="col" className={styles.tableHeadData}>
+                Status
               </th>
             </tr>
           </thead>
-          {/* <tbody>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-              <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                Dev1010
-              </th>
-              <th>
-                ....
-              </th>
-              <th>
-                ....
-              </th>
-              <th>
-                ....
-              </th>
-              <th>
-                ....
-              </th>
-              <th>
-                <div>
-                  <a href="#" className="text-white block w-full bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 font-medium rounded-lg text-sm px-4 py-2.5 text-center dark:focus:ring-blue-700">Unassigned</a>
-                </div>
-              </th>
+          <tbody>
+            {Array.isArray(ticketList) ? (
+              ticketList.map((ticket, index) => {
+                let tixNo = Object.keys(ticket)[0];
+                return (
+                  <tr key={index} className={styles.tableRow}>
+                    <th scope="row" className={styles.link}>
+                     <a href={`/ticket/${tixNo}`}> {tixNo}</a>
+                    </th>
+                    <td className={styles.tableHeadData}>
+                      {ticket[tixNo]?.title}
+                    </td>
+                    <td className={styles.tableHeadData}>
+                      {ticket[tixNo]?.category}
+                    </td>
+                    <td className={styles.tableHeadData}>
+                      {ticket[tixNo]?.date}
+                    </td>
 
-            </tr>
-          </tbody> */}
+                    {ticket[tixNo]?.assigned ? (
+                      <th className={styles.link}>ticket[tixNo].assigned</th>
+                    ) : (
+                      <th className={styles.link}>Unassigned</th>
+                    )}
+
+                    <th className={styles.link}>{ticket[tixNo]?.STATUS}</th>
+                  </tr>
+                );
+              })
+            ) : (
+              <tr className={styles.tableRow}>
+                <th scope="row">
+                  <a href="#" className={styles.link}>
+                    Loading Tickets
+                  </a>
+                </th>
+              </tr>
+            )}
+          </tbody>
         </table>
       </div>
     </>
